@@ -1,0 +1,38 @@
+.iconClass {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: rgb(33, 150, 243);
+        transform: scale(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover::after {
+        transform: scale(1);
+    }
+
+    span {
+        color: rgb(33, 150, 243);
+        font-size: 20px;
+        font-weight: 600;
+    }
+}
+
+.activeLink::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: rgb(33, 150, 243);
+    transition: transform 0.3s ease;
+
+    &:hover::after {
+        transform: none;
+    }
+}
