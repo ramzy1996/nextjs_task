@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 export default function NotFound() {
     const router = useRouter()
     return (
-        <section className="bg-white dark:bg-gray-900 ">
+        <section className="bg-white dark:bg-gray-900 h-[80vh]">
             <div className="container min-h-screen px-6 py-12 mx-auto lg:flex lg:items-center lg:gap-12">
                 <div className="wf-ull lg:w-1/2">
                     <p className="text-sm font-medium text-blue-500 dark:text-blue-400">404 error</p>
