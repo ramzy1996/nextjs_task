@@ -25,7 +25,7 @@ export default function RootLayout({
                             <Navbar />
                         </div>
                     </div>
-                    <div id='home' className='flex justify-center items-start pt-[120px]'>
+                    <div id='home' className='flex justify-center items-start pt-[120px] px-5'>
                         <div className='xl:max-w-[1280px] w-full text-white'>
                             {children}
                         </div>

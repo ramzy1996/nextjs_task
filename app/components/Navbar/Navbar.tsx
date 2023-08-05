@@ -11,7 +11,7 @@ const Navbar = () => {
     const route = useRouter();
     const pathname = usePathname();
     return (
-        <nav className={`backdrop-blur shadow fixed z-50 left-0 right-0 top-0 w-full flex py-1  justify-between items-center navbar sm:px-16 px-6`}>
+        <nav className={`backdrop-blur shadow fixed z-50 left-0 right-0 top-0 w-full flex py-1  justify-between items-center navbar sm:px-16 px-6 border-b-[1px] border-black`}>
             <Image src='/logo.png' alt="V4Codes" width={100} height={80} className='cursor-pointer' onClick={() => route.push('/')} />
             <ul className='list-none flex gap-16 justify-end items-center flex-1'>
                 {

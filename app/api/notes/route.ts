@@ -1,5 +1,5 @@
 import client from '@/app/PrismaConfig/PrismaConfig';
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { ErrorResponse, SuccessResponse } from '../Response';
 //url: http://localhost:3000/api/notes
 

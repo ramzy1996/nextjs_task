@@ -7,13 +7,13 @@ import { GiShakingHands } from 'react-icons/gi'
 const HomeBanner = () => {
     return (
         <section
-            className="flex flex-col sm:justify-between items-center sm:flex-row mt-2 md:mt-2 px-5 "
+            className="flex flex-col sm:justify-between items-center sm:flex-row md:mt-2 px-5 "
         >
             <div className="w-full md:w-1/3 text-left">
                 <h1
                     className="font-general-semibold text-2xl lg:text-3xl xl:text-4xl text-center sm:text-left text-primary-light uppercase"
                 >
-                    <span className='flex'> Hello &nbsp; <GiShakingHands className="text-yellow-500" />, </span>
+                    <p className='flex max-sm:justify-center text-center sm:text-left leading-normal'> Hello &nbsp; <GiShakingHands className="text-yellow-500" />, </p>
                     I'm  Ramzy Ahmed
                 </h1>
                 <p
