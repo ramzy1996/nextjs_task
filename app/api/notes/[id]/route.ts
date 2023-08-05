@@ -1,7 +1,7 @@
 import client from '@/app/PrismaConfig/PrismaConfig';
 import { NextRequest } from 'next/server'
 import { ObjectId } from 'mongodb';
-import { ErrorResponse, SuccessResponse } from '../Response';
+import { ErrorResponse, SuccessResponse } from '../../Response';
 //url: http://localhost:3000/api/notes/00202
 
 //get by id

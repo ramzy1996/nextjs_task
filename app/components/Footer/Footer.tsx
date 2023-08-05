@@ -4,7 +4,7 @@ const Footer = () => {
     const date = new Date();
     const year = date.getFullYear()
     return (
-        <footer className="bg-neutral-900 text-center text-white mt-4">
+        <footer className="bg-neutral-900 text-center text-white mt-4 absolute bottom-auto w-full">
             <div className="px-6 pt-6 w-[100%]">
                 <div className="mb-6 flex justify-center">
                     {/* facebook */}

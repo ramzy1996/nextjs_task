@@ -1,5 +1,6 @@
 import client from '@/app/PrismaConfig/PrismaConfig';
 import { NextRequest, NextResponse } from 'next/server'
+import { ErrorResponse, SuccessResponse } from '../Response';
 //url: http://localhost:3000/api/notes
 
 // post method
@@ -12,9 +13,9 @@ export const POST = async (req: NextRequest) => {
                 title, content
             }
         })
-        return NextResponse.json(newNote, { status: 200 })
+        return SuccessResponse(newNote, 200)
     } catch (error) {
-        return NextResponse.json({ message: 'Create Error', error }, { status: 500 })
+        return ErrorResponse('Create Error', 500)
     }
 }
 
@@ -22,8 +23,8 @@ export const POST = async (req: NextRequest) => {
 export const GET = async () => {
     try {
         const getNotes = await client.notes.findMany()
-        return NextResponse.json(getNotes, { status: 200 })
+        return SuccessResponse(getNotes, 200)
     } catch (error) {
-        return NextResponse.json({ message: 'Get Error', error }, { status: 500 })
+        return ErrorResponse('Get Error', 500)
     }
 }
