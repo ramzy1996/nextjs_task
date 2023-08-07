@@ -1,29 +1,43 @@
 "use client"
 import { useEffect, useState } from 'react'
-import NoteCard from '../components/NoteCard/NoteCard';
 import { INotes } from '../Interfaces/INotes';
-import Loading from '../components/Loading/Loading';
+import dynamic from 'next/dynamic';
+import { get, post } from '../utility/apiClient';
+import Modal from '../components/Modal/Modal';
+
+const NoteCardLoading = dynamic(() => import('../components/NoteCard/NoteCardLoading'))
+const NoteCard = dynamic(() => import('../components/NoteCard/NoteCard'))
 
 const NoteApp = () => {
     const [notes, setNotes] = useState<INotes[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    const currentURL = typeof window !== 'undefined' && window.location.origin;
+    const [loading, setLoading] = useState<boolean>(true)
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [inputValues, setInputValues] = useState<INotes>({})
 
-    const getData = () => {
-        setLoading(true)
-        fetch(`${currentURL}/api/notes`)
-            .then(res => {
-                return res.json()
-            }).then(data => {
-                setNotes(data)
+    const getData = async () => {
+        // setLoading(true)
+        await get('/notes')
+            .then((res: any) => {
+                setNotes(res.data)
                 setLoading(false)
-            }).catch(err => {
-                console.log('Get Error', err)
+            }).catch((err) => {
+                console.log(err)
             })
     }
     useEffect(() => {
         getData()
     }, [])
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        post('/notes', inputValues)
+            .then((res) => {
+                getData()
+            })
+            .finally(() => {
+                setInputValues({})
+                setModalOpen(false)
+            })
+    }
 
     return (
         <>
@@ -31,25 +45,31 @@ const NoteApp = () => {
                 <h1 className="text-5xl max-sm:text-3xl text-center font-bold text-teal-500">
                     Your Notes
                 </h1>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded focus:outline-none focus:shadow-outline px-4">
+                <button onClick={() => setModalOpen(true)} data-hs-overlay="#NoteModal" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded focus:outline-none focus:shadow-outline px-4 ease-linear transition-all duration-150">
                     Add Note
                 </button>
-
             </div>
 
             <div className='flex flex-wrap gap-6 justify-center'>
                 {
-                    notes.map((note: INotes) => {
-                        return (
-                            <NoteCard key={note.id} note={note} />
-                        )
-                    })
+                    !loading ?
+                        notes?.map((note: INotes, i: any) => {
+                            return (
+                                <NoteCard key={note.id} note={note} />
+                            )
+                        })
+                        :
+                        Array(3).fill(null).map((ele: any, i: any) => {
+                            return (
+                                <NoteCardLoading key={i} />
+                            )
+                        })
                 }
             </div>
             {
-                loading && (
-                    <Loading />
-                )
+                modalOpen ? (
+                    <Modal handleSubmit={handleSubmit} setModalOpen={setModalOpen} setInputValues={setInputValues} inputValues={inputValues} />
+                ) : null
             }
         </>
     )

@@ -1,5 +1,7 @@
 import React from 'react'
-import HomeBanner from './components/HomeBanner/HomeBanner'
+import dynamic from "next/dynamic";
+
+const HomeBanner = dynamic(() => import('./components/HomeBanner/HomeBanner'))
 
 const Home = () => {
     return (

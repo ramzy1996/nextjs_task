@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${inter.className}`}>
+            <body className={`${inter.className}`} suppressHydrationWarning={true}>
                 <div className='w-full overflow-hidden'>
                     <div className='px-6 flex justify-center items-center'>
                         <div className='xl:max-w-[1280px] w-full'>
