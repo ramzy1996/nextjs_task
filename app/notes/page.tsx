@@ -68,7 +68,7 @@ const NoteApp = () => {
                         getData()
                     })
                     .finally(() => {
-                        setInputValues({})
+                        resetForm()
                         setModalOpen(false)
                     })
             } else {
@@ -87,7 +87,6 @@ const NoteApp = () => {
         inputValues.content = ''
         setErrorTitleClass(false)
         setErrorContentClass(false)
-
     }
 
     return (
