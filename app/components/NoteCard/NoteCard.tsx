@@ -4,16 +4,10 @@ import { FiEdit } from 'react-icons/fi'
 import { INoteCard } from '@/app/Interfaces/INoteCard'
 import DisplayLimitedText from './DisplayLimitedText'
 import Link from 'next/link'
+import { formatDate } from '@/app/utility/FormatDate'
 const NoteCard = ({ note }: INoteCard) => {
 
-    const formatDate = (dateString: string | undefined): string => {
-        if (!dateString) {
-            return "Invalid Date";
-        }
-        const inputDate = new Date(dateString);
-        const options: any = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-        return inputDate.toLocaleDateString('en-US', options);
-    }
+
     return (
         <div className="lg:w-[30vw] md:w-[40vw] sm:w-[60vw] max-sm:w-full min-h-[35vh] flex flex-col relative p-6 hover:bg-gray-700 border rounded-lg shadow bg-gray-800 border-gray-700">
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">

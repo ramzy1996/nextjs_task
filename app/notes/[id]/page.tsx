@@ -24,88 +24,29 @@ const page = () => {
 
     const { id }: any = useParams()
     const getData = async () => {
-        // setLoading(true)
-        // await getById('/notes', id)
-        //     .then((res: any) => {
-        //         if (res.status === 200) {
-        //             console.log(res)
-        //             setNoteData(res.data)
-        //         } else {
-        //             alert('Error')
-        //         }
-
-        //     }).catch((err) => {
-        //         console.log(err)
-        //     })
-
-        try {
-            // const res: any = await getById('/notes', id);
-            // const res: any = await fetch(`${hostname}/api/notes/${id}`);
-            // const data = await res.json()
-            // // console.log(data.error)
-            // if (res.status === 200) {
-            //     setNoteData(data)
-            // } else {
-            //     console.log(data.message)
-            // }
-
-            await getById('/notes', id)
-                .then((res) => {
-                    var response: any = res
-                    setLoading(false)
-                    setNoteData(response.data)
-                    // if (response.data.statusCode === 200) {
-                    // }
-                }).catch((err) => {
-                    console.log(err)
-                    setError(true)
-                    setLoading(false)
-                    // setErrorMsg(err.response?.data.message)
-                    // let data:IMsgBoxData={
-
-                    // }
-                    setModalData({
-                        isShow: true,
-                        classname: 'warning',
-                        message: err.response?.data.message,
-                        title: 'Fetch Error',
-                        callbackFunction: null,
-                        btnName: ''
-                    })
-                    // if (err.response.status === 400 || err.response.status === 404) {
-                    //     setNotFoundPage(true)
-                    // } else {
-                    //     setNotFoundPage(false)
-                    //     console.log(err.response.status)
-                    //     console.log(err.response?.data.message)
-                    // }
+        await getById('/notes', id)
+            .then((res) => {
+                var response: any = res
+                setLoading(false)
+                setNoteData(response.data)
+            }).catch((err) => {
+                console.log(err)
+                setError(true)
+                setLoading(false)
+                setModalData({
+                    isShow: true,
+                    classname: 'warning',
+                    message: err.response?.data.message,
+                    title: 'Fetch Error',
+                    callbackFunction: null,
+                    btnName: ''
                 })
-            // .finally(() => {
-            //     setNoteData({})
-            //     setError(false)
-            //     setLoading(false)
-            // })
-            // await axios.get(`${hostname}/api/notes/${id}`).then(res => {
-            //     console.log(res)
-            // }).catch(err => {
-            //     console.log(err.response?.data.message)
-            //     notFound()
-            // })
-        } catch (error: any) {
-            // if (error.response) {
-            //     console.error(error.response.data.error); // Set the error message from the API response
-            // } else {
-            //     console.error('Fetch Error:', error.message);
-            // }
-            console.log(error)
-        }
-
+            })
     }
     console.log(modalData)
     useEffect(() => {
         getData()
     }, [])
-
 
     return (
         <>

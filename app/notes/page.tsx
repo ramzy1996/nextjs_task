@@ -7,13 +7,45 @@ import Modal from '../components/Modal/Modal';
 
 const NoteCardLoading = dynamic(() => import('../components/NoteCard/NoteCardLoading'))
 const NoteCard = dynamic(() => import('../components/NoteCard/NoteCard'))
-
+const initialValues: INotes = {
+    content: '',
+    title: '',
+    id: ''
+}
 const NoteApp = () => {
     const [notes, setNotes] = useState<INotes[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [modalOpen, setModalOpen] = useState<boolean>(false)
-    const [inputValues, setInputValues] = useState<INotes>({})
+    const [errorTitleClass, setErrorTitleClass] = useState<boolean>(false)
+    const [errorContentClass, setErrorContentClass] = useState<boolean>(false)
+    const [inputValues, setInputValues] = useState<INotes>(initialValues)
 
+    useEffect(() => {
+        TitleValidation()
+        setErrorTitleClass(false)
+    }, [inputValues.title])
+
+    useEffect(() => {
+        ContentValidation()
+        setErrorContentClass(false)
+    }, [inputValues.content])
+
+    const TitleValidation = (): boolean => {
+        if (inputValues.title?.length !== 0) {
+            setErrorTitleClass(false)
+        } else {
+            setErrorTitleClass(true)
+        }
+        return errorTitleClass
+    }
+    const ContentValidation = (): boolean => {
+        if (inputValues.content?.length !== 0) {
+            setErrorContentClass(false)
+        } else {
+            setErrorContentClass(true)
+        }
+        return errorContentClass
+    }
     const getData = async () => {
         // setLoading(true)
         await get('/notes')
@@ -29,14 +61,33 @@ const NoteApp = () => {
     }, [])
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        post('/notes', inputValues)
-            .then((res) => {
-                getData()
-            })
-            .finally(() => {
-                setInputValues({})
-                setModalOpen(false)
-            })
+        if (TitleValidation() && ContentValidation()) {
+            if (inputValues.id === '') {
+                post('/notes', inputValues)
+                    .then((res) => {
+                        getData()
+                    })
+                    .finally(() => {
+                        setInputValues({})
+                        setModalOpen(false)
+                    })
+            } else {
+                console.log(inputValues.id)
+                console.log(inputValues.title)
+                console.log('updated', inputValues)
+            }
+        } else {
+            TitleValidation()
+            ContentValidation()
+        }
+    }
+    const resetForm = () => {
+        inputValues.title = ''
+        inputValues.id = ''
+        inputValues.content = ''
+        setErrorTitleClass(false)
+        setErrorContentClass(false)
+
     }
 
     return (
@@ -68,7 +119,7 @@ const NoteApp = () => {
             </div>
             {
                 modalOpen ? (
-                    <Modal handleSubmit={handleSubmit} setModalOpen={setModalOpen} setInputValues={setInputValues} inputValues={inputValues} />
+                    <Modal handleSubmit={handleSubmit} setModalOpen={setModalOpen} setInputValues={setInputValues} inputValues={inputValues} errorContentClass={errorContentClass} errorTitleClass={errorTitleClass} resetForm={resetForm} TitleValidation={TitleValidation} ContentValidation={ContentValidation} />
                 ) : null
             }
         </>
