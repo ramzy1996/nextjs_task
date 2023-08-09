@@ -75,13 +75,14 @@ const NoteApp = () => {
                 setLoading(false)
             }).catch((err) => {
                 setLoading(false)
+                setOpenModal(true)
                 setModalData({
-                    isShow: true,
                     classname: 'error',
                     message: err.response?.data.message,
                     isConfirmation: false,
                     title: 'Fetch Error',
-                    btnName: ''
+                    btnName: '',
+                    callbackFunction: () => setOpenModal(false)
                 })
             })
     }
@@ -114,30 +115,31 @@ const NoteApp = () => {
             if (inputValues.id === '') {
                 post('/notes', inputValues)
                     .then((res) => {
+                        setOpenModal(true)
                         setModalData({
-                            isShow: true,
                             classname: 'success',
                             message: "Note successfully addedd",
                             title: 'Create Note',
                             isConfirmation: false,
                             btnName: '',
+                            callbackFunction: () => setOpenModal(false)
                         })
                         getData()
                     })
                     .catch((err: any) => {
+                        setOpenModal(true)
                         setModalData({
-                            isShow: true,
                             classname: 'error',
                             message: err.response?.data.message,
                             title: 'Creation Error',
                             isConfirmation: false,
-                            btnName: ''
+                            btnName: '',
+                            callbackFunction: () => setOpenModal(false)
                         })
                     })
                     .finally(() => {
                         resetForm()
                         setModalOpen(false)
-                        setModalData({})
                     })
             } else {
                 console.log(inputValues.id)
@@ -157,6 +159,7 @@ const NoteApp = () => {
         setErrorTitleClass(false)
         setErrorContentClass(false)
     }
+    console.log(modalData)
 
     return (
         <>
@@ -208,7 +211,11 @@ const NoteApp = () => {
             }
             {/* show error modal popup */}
 
-            <MessageBox {...modalData} />
+            {
+                openModal && (
+                    <MessageBox {...modalData} />
+                )
+            }
         </>
     )
 }

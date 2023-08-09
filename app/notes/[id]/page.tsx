@@ -17,6 +17,7 @@ const page = () => {
     const [loading, setLoading] = useState<boolean>(true)
     //modal data
     const [modalData, setModalData] = useState<IMsgBoxData>({})
+    const [openModal, setOpenModal] = useState<boolean>(false)
 
     const { id }: any = useParams()
     const getData = async () => {
@@ -28,13 +29,13 @@ const page = () => {
             }).catch((err) => {
                 console.log(err)
                 setLoading(false)
+                setOpenModal(true)
                 setModalData({
-                    isShow: true,
                     classname: 'error',
                     message: err.response?.data.message,
                     title: 'Fetch Error',
                     isConfirmation: false,
-                    callbackFunction: () => router.push('/'),
+                    callbackFunction: () => { setOpenModal(false); router.push('/') },
                     btnName: ''
                 })
             })
@@ -54,7 +55,7 @@ const page = () => {
                 )
             }
 
-            <MessageBox {...modalData} />
+            {openModal && <MessageBox {...modalData} />}
         </>
     )
 }
