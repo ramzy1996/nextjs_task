@@ -136,6 +136,8 @@ const NoteApp = () => {
                     })
                     .finally(() => {
                         resetForm()
+                        setModalOpen(false)
+                        setModalData({})
                     })
             } else {
                 console.log(inputValues.id)
