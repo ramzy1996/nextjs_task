@@ -54,7 +54,8 @@ const NoteCard = ({ note, getData }: any) => {
             title: 'Confirmation',
             isConfirmation: true,
             btnName: 'Delete',
-            actionCallbackFunction: deleteNotes
+            actionCallbackFunction: deleteNotes,
+            closeCallbackFunction: () => setOpenMessageBox(false)
         })
     }
 

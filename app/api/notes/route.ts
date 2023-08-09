@@ -38,3 +38,14 @@ export const GET = async (req: NextRequest) => {
         return ErrorResponse('Get Error', 500)
     }
 }
+
+//delete all data using postman
+export const DELETE = async (req: NextRequest) => {
+    try {
+        const deletedCount = await client.notes.deleteMany()
+
+        return SuccessResponse("Note deleted successfully", 200)
+    } catch (error) {
+        return ErrorResponse("Delete Error", 500)
+    }
+}
