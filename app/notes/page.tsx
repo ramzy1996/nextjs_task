@@ -4,6 +4,10 @@ import { INotes } from '../Interfaces/INotes';
 import dynamic from 'next/dynamic';
 import { get, post } from '../utility/apiClient';
 import Modal from '../components/Modal/Modal';
+import Pagination from '../components/Pagination/Pagination';
+import { usePathname, useParams, useSearchParams, useRouter } from 'next/navigation';
+import { IMsgBoxData } from '../Interfaces/IMsgBoxData';
+import MessageBox from '../components/MessageBox/MessageBox';
 
 const NoteCardLoading = dynamic(() => import('../components/NoteCard/NoteCardLoading'))
 const NoteCard = dynamic(() => import('../components/NoteCard/NoteCard'))
@@ -19,7 +23,16 @@ const NoteApp = () => {
     const [errorTitleClass, setErrorTitleClass] = useState<boolean>(false)
     const [errorContentClass, setErrorContentClass] = useState<boolean>(false)
     const [inputValues, setInputValues] = useState<INotes>(initialValues)
+    const [pageCount, setPageCount] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    //error message from server to show in modal
+    const [error, setError] = useState<boolean>(false)
+    const [modalData, setModalData] = useState<IMsgBoxData>({})
 
+    const router = useRouter();
+    const search = useSearchParams();
+    const pageVal: string | null = search.get('page')
+    const page: number = pageVal ? parseInt(pageVal) : 1
     useEffect(() => {
         TitleValidation()
         setErrorTitleClass(false)
@@ -31,37 +44,76 @@ const NoteApp = () => {
     }, [inputValues.content])
 
     const TitleValidation = (): boolean => {
-        if (inputValues.title?.length !== 0) {
-            setErrorTitleClass(false)
-        } else {
+        let showError = true
+        if (inputValues.title?.length === 0 || inputValues.title === '') {
             setErrorTitleClass(true)
+            showError = true
+        } else {
+            setErrorTitleClass(false)
+            showError = false
         }
-        return errorTitleClass
+        return showError
     }
     const ContentValidation = (): boolean => {
-        if (inputValues.content?.length !== 0) {
-            setErrorContentClass(false)
-        } else {
+        let showError = true
+        if (inputValues.content?.length === 0 || inputValues.content === '') {
             setErrorContentClass(true)
+            showError = true
+        } else {
+            setErrorContentClass(false)
+            showError = false
         }
-        return errorContentClass
+        return showError
     }
     const getData = async () => {
-        // setLoading(true)
-        await get('/notes')
+        setLoading(true)
+        await get(`/notes?page=${page}`)
             .then((res: any) => {
-                setNotes(res.data)
+                console.log(res)
+                setNotes(res.data.getNotes)
+                setPageCount(res.data.pageCount)
                 setLoading(false)
             }).catch((err) => {
-                console.log(err)
+                setError(true)
+                setLoading(false)
+                setModalData({
+                    isShow: true,
+                    classname: 'error',
+                    message: err.response?.data.message,
+                    title: 'Fetch Error',
+                    callbackFunction: null,
+                    btnName: ''
+                })
             })
     }
     useEffect(() => {
         getData()
     }, [])
+
+    //pagination click
+    const handlePageClick = (clcik: any) => {
+        let selected = clcik.selected + 1;
+        setCurrentPage(selected);
+        router.push(`?page=${selected}`);
+
+        document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    //setpage
+    useEffect(() => {
+        if (page) {
+            setCurrentPage(page);
+            getData()
+        }
+    }, [page]);
+    // pagecount 
+
+
     const handleSubmit = (e: any) => {
+        // console.log(TitleValidation(), ContentValidation())
         e.preventDefault();
-        if (TitleValidation() && ContentValidation()) {
+        if (!TitleValidation() && !ContentValidation()) {
+            console.log("valid", inputValues)
             if (inputValues.id === '') {
                 post('/notes', inputValues)
                     .then((res) => {
@@ -79,6 +131,7 @@ const NoteApp = () => {
         } else {
             TitleValidation()
             ContentValidation()
+            return
         }
     }
     const resetForm = () => {
@@ -103,23 +156,44 @@ const NoteApp = () => {
             <div className='flex flex-wrap gap-6 justify-center'>
                 {
                     !loading ?
-                        notes?.map((note: INotes, i: any) => {
-                            return (
-                                <NoteCard key={note.id} note={note} />
-                            )
-                        })
+                        notes.length !== 0 ? (
+                            notes?.map((note: INotes, i: any) => {
+                                return (
+                                    <NoteCard key={note.id} note={note} />
+                                )
+                            })
+                        ) : (
+                            <div className='flex flex-wrap justify-center'>
+                                No available notes at this time please add your notes using above Add Note button.
+                                <br />
+                                Thank you.
+                            </div>
+                        )
                         :
-                        Array(3).fill(null).map((ele: any, i: any) => {
+                        Array(5).fill(null).map((ele: any, i: any) => {
                             return (
                                 <NoteCardLoading key={i} />
                             )
                         })
                 }
             </div>
+            <div className='flex flex-wrap gap-6 justify-center'>
+                <Pagination
+                    pageCount={pageCount}
+                    handlePageClick={handlePageClick}
+                    currentPage={currentPage}
+                />
+            </div>
             {
                 modalOpen ? (
                     <Modal handleSubmit={handleSubmit} setModalOpen={setModalOpen} setInputValues={setInputValues} inputValues={inputValues} errorContentClass={errorContentClass} errorTitleClass={errorTitleClass} resetForm={resetForm} TitleValidation={TitleValidation} ContentValidation={ContentValidation} />
                 ) : null
+            }
+            {/* show error modal popup */}
+            {
+                error && (
+                    <MessageBox {...modalData} />
+                )
             }
         </>
     )

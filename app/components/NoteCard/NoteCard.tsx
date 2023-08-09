@@ -13,12 +13,13 @@ const NoteCard = ({ note }: INoteCard) => {
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">
                 {note.title}
             </h5>
-            <p className="mb-3 font-normal text-gray-400">
+            <p className="mb-3 font-normal text-gray-400 min-h-[25vh] flex flex-col justify-between">
                 <DisplayLimitedText text={note.content} maxlen={100} />
+                <p className="font-mono text-[13px] text-gray-200 flex justify-end mb-10">
+                    {formatDate(note.createdAt)}
+                </p>
             </p>
-            <p className="mb-3 font-mono text-[13px] text-gray-200 flex justify-end">
-                {formatDate(note.createdAt)}
-            </p>
+
             <div className='flex mb-5 absolute bottom-0'>
                 <Link href={`notes/${note.id}` || '/'} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none  focus:ring-blue-800">
                     Read more

@@ -10,10 +10,6 @@ import MessageBox from '@/app/components/MessageBox/MessageBox'
 import { IMsgBoxData } from '@/app/Interfaces/IMsgBoxData'
 
 const SingleNote = dynamic(() => import('@/app/components/SingleNote/SingleNote'))
-const NotFound = dynamic(() => import('@/app/components/NotFound/NotFound'))
-
-const hostname = typeof window !== 'undefined' && window.location.origin;
-
 
 const page = () => {
     const [noteData, setNoteData] = useState<INotes>({})
@@ -35,7 +31,7 @@ const page = () => {
                 setLoading(false)
                 setModalData({
                     isShow: true,
-                    classname: 'warning',
+                    classname: 'error',
                     message: err.response?.data.message,
                     title: 'Fetch Error',
                     callbackFunction: null,
