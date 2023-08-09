@@ -21,7 +21,7 @@ const NoteCard = ({ note, getData }: any) => {
             .then((res) => {
                 var response: any = res
                 setLoading(false)
-                console.log(response.data)
+                // console.log(response.data)
 
                 setOpenMessageBox(true)
                 setModalData({
@@ -33,7 +33,7 @@ const NoteCard = ({ note, getData }: any) => {
                     btnName: ''
                 })
             }).catch((err) => {
-                console.log(err)
+                // console.log(err)
                 setLoading(false)
                 setOpenMessageBox(true)
                 setModalData({

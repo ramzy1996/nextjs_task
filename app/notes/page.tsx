@@ -111,7 +111,7 @@ const NoteApp = () => {
         // console.log(TitleValidation(), ContentValidation())
         e.preventDefault();
         if (!TitleValidation() && !ContentValidation()) {
-            console.log("valid", inputValues)
+            // console.log("valid", inputValues)
             if (inputValues.id === '') {
                 post('/notes', inputValues)
                     .then((res) => {

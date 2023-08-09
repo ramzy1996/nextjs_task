@@ -8,7 +8,7 @@ import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
 const SingleNote = (props: any) => {
     const router = useRouter()
     const { noteData }: ISingleNote = props
-    console.log(noteData)
+    // console.log(noteData)
     return (
         <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-white dark:bg-gray-900">
             <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">

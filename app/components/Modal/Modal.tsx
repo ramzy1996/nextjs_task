@@ -6,7 +6,7 @@ const Modal = ({ handleSubmit, setModalOpen, setInputValues, inputValues, errorT
         const { name, value } = e.target
         setInputValues((prev: any) => ({ ...prev, [name]: value }))
     }
-    console.log(errorTitleClass)
+    // console.log(errorTitleClass)
     const CloseModal = async () => {
         await resetForm()
         setModalOpen(false)

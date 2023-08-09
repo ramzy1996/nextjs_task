@@ -27,7 +27,7 @@ const page = () => {
                 setLoading(false)
                 setNoteData(response.data)
             }).catch((err) => {
-                console.log(err)
+                // console.log(err)
                 setLoading(false)
                 setOpenMessageBox(true)
                 setModalData({
