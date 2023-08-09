@@ -79,6 +79,7 @@ const NoteApp = () => {
                     isShow: true,
                     classname: 'error',
                     message: err.response?.data.message,
+                    isConfirmation: false,
                     title: 'Fetch Error',
                     btnName: ''
                 })
@@ -135,7 +136,6 @@ const NoteApp = () => {
                     })
                     .finally(() => {
                         resetForm()
-                        setModalOpen(false)
                     })
             } else {
                 console.log(inputValues.id)
