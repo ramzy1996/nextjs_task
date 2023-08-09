@@ -16,8 +16,8 @@ const page = () => {
     const [noteData, setNoteData] = useState<INotes>({})
     const [loading, setLoading] = useState<boolean>(true)
     //modal data
+    const [openMessageBox, setOpenMessageBox] = useState<boolean>(false)
     const [modalData, setModalData] = useState<IMsgBoxData>({})
-    const [openModal, setOpenModal] = useState<boolean>(false)
 
     const { id }: any = useParams()
     const getData = async () => {
@@ -29,13 +29,13 @@ const page = () => {
             }).catch((err) => {
                 console.log(err)
                 setLoading(false)
-                setOpenModal(true)
+                setOpenMessageBox(true)
                 setModalData({
                     classname: 'error',
                     message: err.response?.data.message,
                     title: 'Fetch Error',
                     isConfirmation: false,
-                    callbackFunction: () => { setOpenModal(false); router.push('/') },
+                    callbackFunction: () => { setOpenMessageBox(false); router.push('/') },
                     btnName: ''
                 })
             })
@@ -55,7 +55,7 @@ const page = () => {
                 )
             }
 
-            {openModal && <MessageBox {...modalData} />}
+            {openMessageBox && <MessageBox {...modalData} />}
         </>
     )
 }

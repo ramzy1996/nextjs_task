@@ -26,7 +26,7 @@ const NoteApp = () => {
     const [pageCount, setPageCount] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
     //error message from server to show in modal
-    const [openModal, setOpenModal] = useState<boolean>(false)
+    const [openMessageBox, setOpenMessageBox] = useState<boolean>(false)
     const [modalData, setModalData] = useState<IMsgBoxData>({})
 
     const router = useRouter();
@@ -75,14 +75,14 @@ const NoteApp = () => {
                 setLoading(false)
             }).catch((err) => {
                 setLoading(false)
-                setOpenModal(true)
+                setOpenMessageBox(true)
                 setModalData({
                     classname: 'error',
                     message: err.response?.data.message,
                     isConfirmation: false,
                     title: 'Fetch Error',
                     btnName: '',
-                    callbackFunction: () => setOpenModal(false)
+                    callbackFunction: resetForm
                 })
             })
     }
@@ -115,26 +115,26 @@ const NoteApp = () => {
             if (inputValues.id === '') {
                 post('/notes', inputValues)
                     .then((res) => {
-                        setOpenModal(true)
+                        setOpenMessageBox(true)
                         setModalData({
                             classname: 'success',
                             message: "Note successfully addedd",
                             title: 'Create Note',
                             isConfirmation: false,
                             btnName: '',
-                            callbackFunction: () => setOpenModal(false)
+                            callbackFunction: resetForm
                         })
                         getData()
                     })
                     .catch((err: any) => {
-                        setOpenModal(true)
+                        setOpenMessageBox(true)
                         setModalData({
                             classname: 'error',
                             message: err.response?.data.message,
                             title: 'Creation Error',
                             isConfirmation: false,
                             btnName: '',
-                            callbackFunction: () => setOpenModal(false)
+                            callbackFunction: resetForm
                         })
                     })
                     .finally(() => {
@@ -158,6 +158,7 @@ const NoteApp = () => {
         inputValues.content = ''
         setErrorTitleClass(false)
         setErrorContentClass(false)
+        setOpenMessageBox(false)
     }
     console.log(modalData)
 
@@ -212,7 +213,7 @@ const NoteApp = () => {
             {/* show error modal popup */}
 
             {
-                openModal && (
+                openMessageBox && (
                     <MessageBox {...modalData} />
                 )
             }
