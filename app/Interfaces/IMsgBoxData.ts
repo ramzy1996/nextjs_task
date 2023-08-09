@@ -3,6 +3,7 @@ export interface IMsgBoxData {
     message?: string;
     title?: string;
     isConfirmation?: boolean;
-    callbackFunction?: Function;
+    actionCallbackFunction?: Function;
+    closeCallbackFunction?: Function;
     btnName?: string;
 }

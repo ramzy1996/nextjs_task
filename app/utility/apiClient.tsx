@@ -46,3 +46,14 @@ export const post = (path: string, body: {}) => {
             })
     })
 }
+export const deleteNote = (path: string, id: string) => {
+    return new Promise(async (resolve, reject) => {
+        await axiosClient.delete(`${path}/${id}`)
+            .then(res => {
+                resolve(res)
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
+}

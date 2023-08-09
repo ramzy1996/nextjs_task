@@ -35,12 +35,12 @@ const page = () => {
                     message: err.response?.data.message,
                     title: 'Fetch Error',
                     isConfirmation: false,
-                    callbackFunction: () => { setOpenMessageBox(false); router.push('/') },
+                    closeCallbackFunction: () => { setOpenMessageBox(false); router.push('/') },
                     btnName: ''
                 })
             })
     }
-    console.log(modalData)
+
     useEffect(() => {
         getData()
     }, [])

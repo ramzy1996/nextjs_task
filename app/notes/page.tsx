@@ -25,7 +25,7 @@ const NoteApp = () => {
     const [inputValues, setInputValues] = useState<INotes>(initialValues)
     const [pageCount, setPageCount] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
-    //error message from server to show in modal
+    // display messsage box
     const [openMessageBox, setOpenMessageBox] = useState<boolean>(false)
     const [modalData, setModalData] = useState<IMsgBoxData>({})
 
@@ -82,7 +82,7 @@ const NoteApp = () => {
                     isConfirmation: false,
                     title: 'Fetch Error',
                     btnName: '',
-                    callbackFunction: resetForm
+                    closeCallbackFunction: resetForm
                 })
             })
     }
@@ -122,7 +122,7 @@ const NoteApp = () => {
                             title: 'Create Note',
                             isConfirmation: false,
                             btnName: '',
-                            callbackFunction: resetForm
+                            closeCallbackFunction: resetForm
                         })
                         getData()
                     })
@@ -134,7 +134,7 @@ const NoteApp = () => {
                             title: 'Creation Error',
                             isConfirmation: false,
                             btnName: '',
-                            callbackFunction: resetForm
+                            closeCallbackFunction: resetForm
                         })
                     })
                     .finally(() => {
@@ -179,7 +179,7 @@ const NoteApp = () => {
                         notes.length !== 0 ? (
                             notes?.map((note: INotes, i: any) => {
                                 return (
-                                    <NoteCard key={note.id} note={note} />
+                                    <NoteCard key={note.id} note={note} getData={getData} />
                                 )
                             })
                         ) : (

@@ -6,7 +6,7 @@ import { BsFillInfoCircleFill } from 'react-icons/bs'
 import { IMsgBoxData } from '@/app/Interfaces/IMsgBoxData'
 
 
-const MessageBox = ({ classname = '', callbackFunction = () => { }, message = '', title = '', btnName = '', isConfirmation = false }: IMsgBoxData) => {
+const MessageBox = ({ classname = '', actionCallbackFunction = () => { }, closeCallbackFunction = () => { }, message = '', title = '', btnName = '', isConfirmation = false }: IMsgBoxData) => {
     // const [openModal, setOpenModal] = useState(isShow)
     const [bgColor, setBgColor] = useState('') //icon bg color
     const [btnColor, setBtnColor] = useState('') //button  color
@@ -17,13 +17,15 @@ const MessageBox = ({ classname = '', callbackFunction = () => { }, message = ''
         // setOpenModal(isShow)
         setBgColor(color_bg)
         setBtnColor(color_btn)
-    }, [])
+    }, [classname])
     // const BtnClose = () => {
     //     setOpenModal(!openModal);
     // }
-    const handleCallBackFunction = (e: any) => {
-        // BtnClose()
-        callbackFunction()
+    const handleActionCallBackFunction = (e: any) => {
+        actionCallbackFunction()
+    }
+    const handleCloseCallBackFunction = (e: any) => {
+        closeCallbackFunction()
     }
     // console.log(openModal)
     return (
@@ -61,13 +63,13 @@ const MessageBox = ({ classname = '', callbackFunction = () => { }, message = ''
                                         <div className="items-center gap-2 mt-3 sm:flex">
                                             <button
                                                 className={`w-full mt-2 p-2.5 flex-1 text-white  rounded-md outline-none ring-offset-2 focus:ring-2 ${btnColor}`}
-                                                onClick={handleCallBackFunction}
+                                                onClick={handleActionCallBackFunction}
                                             >
                                                 {btnName}
                                             </button>
                                             <button
                                                 className="w-full mt-2 p-2.5 flex-1 text-gray-800 rounded-md outline-none border ring-offset-2 ring-indigo-600 focus:ring-2"
-                                                onClick={handleCallBackFunction}
+                                                onClick={handleCloseCallBackFunction}
                                             >
                                                 Cancel
                                             </button>
@@ -76,7 +78,7 @@ const MessageBox = ({ classname = '', callbackFunction = () => { }, message = ''
                                         <div className="items-center justify-end gap-2 mt-3 sm:flex">
                                             <button
                                                 className={`w-auto px-10 mt-2 p-2.5 flex-2 text-white rounded-md outline-none border ring-offset-2 focus:ring-2 ${btnColor}`}
-                                                onClick={handleCallBackFunction}
+                                                onClick={handleCloseCallBackFunction}
                                             >
                                                 Close
                                             </button>
