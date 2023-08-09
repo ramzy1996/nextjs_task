@@ -4,26 +4,28 @@ import { BiMessageCheck } from 'react-icons/bi'
 import { RiAlarmWarningFill } from 'react-icons/ri'
 import { BsFillInfoCircleFill } from 'react-icons/bs'
 import { IMsgBoxData } from '@/app/Interfaces/IMsgBoxData'
-import { useRouter } from 'next/navigation'
 
-const MessageBox = ({ isShow = false, classname = '', callbackFunction = null, message = '', title = '', btnName = '' }: IMsgBoxData) => {
+
+const MessageBox = ({ isShow = false, classname = '', callbackFunction = () => { }, message = '', title = '', btnName = '', isConfirmation = false }: IMsgBoxData) => {
     const [openModal, setOpenModal] = useState(isShow)
     const [bgColor, setBgColor] = useState('') //icon bg color
     const [btnColor, setBtnColor] = useState('') //button  color
-    const router = useRouter()
-
 
     useEffect(() => {
         const color_bg = classname == 'error' ? 'bg-red-200' : classname == 'success' ? 'bg-green-200' : classname == 'warning' ? 'bg-orange-200' : classname == 'info' ? 'bg-blue-200' : ''
         const color_btn = classname == 'error' ? 'bg-red-600 ring-red-600 ' : classname == 'success' ? 'bg-green-600 ring-green-600 ' : classname == 'warning' ? 'bg-orange-600 ring-orange-600 ' : classname == 'info' ? 'bg-blue-600 ring-blue-600 ' : ''
+        setOpenModal(isShow)
         setBgColor(color_bg)
         setBtnColor(color_btn)
-    }, [])
+    }, [isShow])
     const BtnClose = () => {
-        router.push('/') //close btn redirect
         setOpenModal(false);
     }
-
+    const handleCallBackFunction = async (e: any) => {
+        BtnClose()
+        callbackFunction()
+    }
+    console.log(openModal)
     return (
         <>
             {
@@ -57,11 +59,11 @@ const MessageBox = ({ isShow = false, classname = '', callbackFunction = null, m
                                             {message}
                                         </p>
                                         {
-                                            callbackFunction !== null ? (
+                                            isConfirmation === true ? (
                                                 <div className="items-center gap-2 mt-3 sm:flex">
                                                     <button
                                                         className={`w-full mt-2 p-2.5 flex-1 text-white  rounded-md outline-none ring-offset-2 focus:ring-2 ${btnColor}`}
-                                                        onClick={callbackFunction}
+                                                        onClick={handleCallBackFunction}
                                                     >
                                                         {btnName}
                                                     </button>
@@ -76,7 +78,7 @@ const MessageBox = ({ isShow = false, classname = '', callbackFunction = null, m
                                                 <div className="items-center justify-end gap-2 mt-3 sm:flex">
                                                     <button
                                                         className={`w-auto px-10 mt-2 p-2.5 flex-2 text-white rounded-md outline-none border ring-offset-2 focus:ring-2 ${btnColor}`}
-                                                        onClick={BtnClose}
+                                                        onClick={handleCallBackFunction}
                                                     >
                                                         Close
                                                     </button>

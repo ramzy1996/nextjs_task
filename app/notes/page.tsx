@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { get, post } from '../utility/apiClient';
 import Modal from '../components/Modal/Modal';
 import Pagination from '../components/Pagination/Pagination';
-import { usePathname, useParams, useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { IMsgBoxData } from '../Interfaces/IMsgBoxData';
 import MessageBox from '../components/MessageBox/MessageBox';
 
@@ -26,7 +26,7 @@ const NoteApp = () => {
     const [pageCount, setPageCount] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
     //error message from server to show in modal
-    const [error, setError] = useState<boolean>(false)
+    const [openModal, setOpenModal] = useState<boolean>(false)
     const [modalData, setModalData] = useState<IMsgBoxData>({})
 
     const router = useRouter();
@@ -74,14 +74,12 @@ const NoteApp = () => {
                 setPageCount(res.data.pageCount)
                 setLoading(false)
             }).catch((err) => {
-                setError(true)
                 setLoading(false)
                 setModalData({
                     isShow: true,
                     classname: 'error',
                     message: err.response?.data.message,
                     title: 'Fetch Error',
-                    callbackFunction: null,
                     btnName: ''
                 })
             })
@@ -106,8 +104,6 @@ const NoteApp = () => {
             getData()
         }
     }, [page]);
-    // pagecount 
-
 
     const handleSubmit = (e: any) => {
         // console.log(TitleValidation(), ContentValidation())
@@ -117,7 +113,25 @@ const NoteApp = () => {
             if (inputValues.id === '') {
                 post('/notes', inputValues)
                     .then((res) => {
+                        setModalData({
+                            isShow: true,
+                            classname: 'success',
+                            message: "Note successfully addedd",
+                            title: 'Create Note',
+                            isConfirmation: false,
+                            btnName: '',
+                        })
                         getData()
+                    })
+                    .catch((err: any) => {
+                        setModalData({
+                            isShow: true,
+                            classname: 'error',
+                            message: err.response?.data.message,
+                            title: 'Creation Error',
+                            isConfirmation: false,
+                            btnName: ''
+                        })
                     })
                     .finally(() => {
                         resetForm()
@@ -164,9 +178,10 @@ const NoteApp = () => {
                             })
                         ) : (
                             <div className='flex flex-wrap justify-center'>
-                                No available notes at this time please add your notes using above Add Note button.
-                                <br />
-                                Thank you.
+                                <div>
+                                    No available notes at this moment please add your notes using above Add Note button.
+                                </div>
+                                <div> Thank you.</div>
                             </div>
                         )
                         :
@@ -190,11 +205,8 @@ const NoteApp = () => {
                 ) : null
             }
             {/* show error modal popup */}
-            {
-                error && (
-                    <MessageBox {...modalData} />
-                )
-            }
+
+            <MessageBox {...modalData} />
         </>
     )
 }

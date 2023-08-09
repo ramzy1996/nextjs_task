@@ -1,21 +1,21 @@
 'use client'
-import { get, getById } from '@/app/utility/apiClient'
+import { getById } from '@/app/utility/apiClient'
 import { INotes } from '@/app/Interfaces/INotes'
-import { notFound, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import axios, { AxiosError } from 'axios'
 import dynamic from 'next/dynamic'
 import Loading from '@/app/components/Loading/Loading'
 import MessageBox from '@/app/components/MessageBox/MessageBox'
 import { IMsgBoxData } from '@/app/Interfaces/IMsgBoxData'
+import { useRouter } from 'next/navigation'
 
 const SingleNote = dynamic(() => import('@/app/components/SingleNote/SingleNote'))
 
 const page = () => {
+    const router = useRouter()
     const [noteData, setNoteData] = useState<INotes>({})
-    const [error, setError] = useState<boolean>(false)
-    // const [errorMsg, setErrorMsg] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(true)
+    //modal data
     const [modalData, setModalData] = useState<IMsgBoxData>({})
 
     const { id }: any = useParams()
@@ -27,14 +27,14 @@ const page = () => {
                 setNoteData(response.data)
             }).catch((err) => {
                 console.log(err)
-                setError(true)
                 setLoading(false)
                 setModalData({
                     isShow: true,
                     classname: 'error',
                     message: err.response?.data.message,
                     title: 'Fetch Error',
-                    callbackFunction: null,
+                    isConfirmation: false,
+                    callbackFunction: () => router.push('/'),
                     btnName: ''
                 })
             })
@@ -53,11 +53,8 @@ const page = () => {
                     <SingleNote noteData={noteData} />
                 )
             }
-            {
-                error && (
-                    <MessageBox {...modalData} />
-                )
-            }
+
+            <MessageBox {...modalData} />
         </>
     )
 }
