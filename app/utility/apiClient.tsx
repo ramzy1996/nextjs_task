@@ -46,9 +46,21 @@ export const post = (path: string, body: {}) => {
             })
     })
 }
-export const deleteNote = (path: string, id: string) => {
+export const remove = (path: string, id: string) => {
     return new Promise(async (resolve, reject) => {
         await axiosClient.delete(`${path}/${id}`)
+            .then(res => {
+                resolve(res)
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
+}
+
+export const update = (path: string, id: string, body: {}) => {
+    return new Promise(async (resolve, reject) => {
+        await axiosClient.patch(`${path}/${id}`, body)
             .then(res => {
                 resolve(res)
             })

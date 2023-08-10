@@ -41,7 +41,7 @@ export const PATCH = async (req: NextRequest, { params }: any) => {
         })
         if (!updatedNote) return ErrorResponse("Note not found", 404)
 
-        return SuccessResponse(updatedNote, 200)
+        return SuccessResponse("Note updated successfully.", 200)
     } catch (error) {
         return ErrorResponse("Update Error", 500)
     }

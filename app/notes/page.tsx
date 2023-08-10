@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { INotes } from '../Interfaces/INotes';
 import dynamic from 'next/dynamic';
-import { get, post } from '../utility/apiClient';
+import { get, post, update } from '../utility/apiClient';
 import Modal from '../components/Modal/Modal';
 import Pagination from '../components/Pagination/Pagination';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -69,7 +69,6 @@ const NoteApp = () => {
         setLoading(true)
         await get(`/notes?page=${page}`)
             .then((res: any) => {
-                console.log(res)
                 setNotes(res.data.getNotes)
                 setPageCount(res.data.pageCount)
                 setLoading(false)
@@ -138,13 +137,34 @@ const NoteApp = () => {
                         })
                     })
                     .finally(() => {
-                        resetForm()
                         setModalOpen(false)
                     })
             } else {
-                console.log(inputValues.id)
-                console.log(inputValues.title)
-                console.log('updated', inputValues)
+                let id: any = inputValues.id ? inputValues.id : ''
+                update('/notes', id, inputValues)
+                    .then((res) => {
+                        var response: any = res
+                        setOpenMessageBox(true)
+                        setModalData({
+                            classname: 'success',
+                            message: response.data,
+                            title: 'Update Success',
+                            isConfirmation: false,
+                            closeCallbackFunction: () => { resetForm(); getData() },
+                            btnName: ''
+                        })
+                    }).catch((err) => {
+                        setOpenMessageBox(true)
+                        setModalData({
+                            classname: 'error',
+                            message: err.response?.data.message,
+                            title: 'Update Error',
+                            isConfirmation: false,
+                            closeCallbackFunction: resetForm,
+                            btnName: ''
+                        })
+                    })
+
             }
         } else {
             TitleValidation()
@@ -153,14 +173,13 @@ const NoteApp = () => {
         }
     }
     const resetForm = () => {
-        inputValues.title = ''
-        inputValues.id = ''
-        inputValues.content = ''
+        setOpenMessageBox(false)
+        setInputValues(initialValues)
+
         setErrorTitleClass(false)
         setErrorContentClass(false)
-        setOpenMessageBox(false)
+        setModalOpen(false);
     }
-    console.log(modalData)
 
     return (
         <>
@@ -168,7 +187,7 @@ const NoteApp = () => {
                 <h1 className="text-5xl max-sm:text-3xl text-center font-bold text-teal-500">
                     Your Notes
                 </h1>
-                <button onClick={() => setModalOpen(true)} data-hs-overlay="#NoteModal" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded focus:outline-none focus:shadow-outline px-4 ease-linear transition-all duration-150">
+                <button onClick={() => { setInputValues(initialValues); setModalOpen(true) }} data-hs-overlay="#NoteModal" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded focus:outline-none focus:shadow-outline px-4 ease-linear transition-all duration-150">
                     Add Note
                 </button>
             </div>
@@ -179,7 +198,7 @@ const NoteApp = () => {
                         notes.length !== 0 ? (
                             notes?.map((note: INotes, i: any) => {
                                 return (
-                                    <NoteCard key={note.id} note={note} getData={getData} />
+                                    <NoteCard key={i} note={note} getData={getData} setModalOpen={setModalOpen} setInputValues={setInputValues} />
                                 )
                             })
                         ) : (

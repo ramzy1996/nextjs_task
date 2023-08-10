@@ -21,11 +21,11 @@ const MessageBox = ({ classname = '', actionCallbackFunction = () => { }, closeC
     // const BtnClose = () => {
     //     setOpenModal(!openModal);
     // }
-    const handleActionCallBackFunction = (e: any) => {
-        actionCallbackFunction()
+    const handleActionCallBackFunction = async (e: any) => {
+        await actionCallbackFunction()
     }
-    const handleCloseCallBackFunction = (e: any) => {
-        closeCallbackFunction()
+    const handleCloseCallBackFunction = async (e: any) => {
+        await closeCallbackFunction()
     }
     // console.log(openModal)
     return (

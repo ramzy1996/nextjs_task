@@ -8,19 +8,19 @@ import { formatDate } from '@/app/utility/FormatDate'
 import { useState } from 'react'
 import { IMsgBoxData } from '@/app/Interfaces/IMsgBoxData'
 import MessageBox from '../MessageBox/MessageBox'
-import { deleteNote } from '@/app/utility/apiClient'
+import { remove, update } from '@/app/utility/apiClient'
 
-const NoteCard = ({ note, getData }: any) => {
-    const [loading, setLoading] = useState<boolean>(true)
+const NoteCard = ({ note, getData, setModalOpen, setInputValues }: any) => {
+    // const [loading, setLoading] = useState<boolean>(true)
     // display messsage box
     const [openMessageBox, setOpenMessageBox] = useState<boolean>(false)
     const [modalData, setModalData] = useState<IMsgBoxData>({})
     const deleteNotes = async () => {
         let id: any = note.id ? note.id : ''
-        await deleteNote('/notes', id)
+        await remove('/notes', id)
             .then((res) => {
                 var response: any = res
-                setLoading(false)
+                // setLoading(false)
                 // console.log(response.data)
 
                 setOpenMessageBox(true)
@@ -34,7 +34,7 @@ const NoteCard = ({ note, getData }: any) => {
                 })
             }).catch((err) => {
                 // console.log(err)
-                setLoading(false)
+                // setLoading(false)
                 setOpenMessageBox(true)
                 setModalData({
                     classname: 'error',
@@ -46,6 +46,7 @@ const NoteCard = ({ note, getData }: any) => {
                 })
             })
     }
+
     const handleDelete = () => {
         setOpenMessageBox(true)
         setModalData({
@@ -57,6 +58,11 @@ const NoteCard = ({ note, getData }: any) => {
             actionCallbackFunction: deleteNotes,
             closeCallbackFunction: () => setOpenMessageBox(false)
         })
+    }
+    const handleEdit = () => {
+        setModalOpen(true)
+        setInputValues(note)
+        console.log(note)
     }
 
     return (
@@ -80,7 +86,7 @@ const NoteCard = ({ note, getData }: any) => {
                     <button className="ms-3 inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md" onClick={handleDelete}>
                         <PiTrashBold className="text-2xl" />
                     </button>
-                    <button className="inline-flex items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md ms-3">
+                    <button className="inline-flex items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md ms-3" onClick={handleEdit}>
                         <FiEdit className="text-2xl" />
                     </button>
                 </div>
